@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+
+<header></header>
+
+<section></section>
+
+<body onload="requestConsumo()">
+
+	<script type="text/javascript">
+		const section = document.querySelector('section');
+
+		function requestConsumo(){
+			//Parte de tabla para imprimir
+			var body = document.getElementsByTagName("body")[0];
+			var tabla   = document.createElement("table");
+			var encabezadoTabla = document.createElement("thead");
+  			var cuerpoTabla = document.createElement("tbody");
+
+			//Parte del get
+		    var url = 'http://testing.iclounder.com/edsonfer/prueba.json';
+		    const respuesta = new XMLHttpRequest();
+		    respuesta.open('GET', url);
+
+		    respuesta.responseType = 'json';
+			respuesta.send();
+
+			respuesta.onload = function() {
+				var listaDisp = buscaConexiones(respuesta.response);
+
+				//Encabezado de la tabla
+				var fila = document.createElement("tr");
+				var celda1 = document.createElement("th");
+				var textoCel1 = document.createTextNode('Dispositivo');
+				var celda2 = document.createElement("th");
+				var textoCel2 = document.createTextNode('Conexiones');
+				var celda3 = document.createElement("th");
+				var textoCel3 = document.createTextNode("Carga");
+				var celda4 = document.createElement("th");
+				var textoCel4 = document.createTextNode("Descarga");
+				celda1.appendChild(textoCel1);
+				celda2.appendChild(textoCel2);
+				celda3.appendChild(textoCel3);
+				celda4.appendChild(textoCel4);
+	      		fila.appendChild(celda1);
+	      		fila.appendChild(celda2);
+	      		fila.appendChild(celda3);
+	      		fila.appendChild(celda4);
+	      		encabezadoTabla.appendChild(fila);
+				
+				//Cuerpo de la tabla
+				for(var i = 0; i < listaDisp.length; i++){				
+      				var fila = document.createElement("tr");
+					for (var j = 1; j <= 4; j++) {
+	      				var celda = document.createElement("td");
+
+	      				if (j == 1){
+	      					var textoCelda = document.createTextNode(listaDisp[i].device);
+	      				}
+	      				else if(j == 3){
+	      					var textoCelda = document.createTextNode(listaDisp[i].load);
+	      				}
+	      				else if(j == 4){
+	      					var textoCelda = document.createTextNode(listaDisp[i].download);
+	      				}
+	      				else{
+	      					var textoCelda = document.createTextNode(listaDisp[i].conexiones);
+	      				}
+      					celda.appendChild(textoCelda);
+      					fila.appendChild(celda);
+    				}
+    				cuerpoTabla.appendChild(fila);
+				}
+  			}
+  			
+  			tabla.appendChild(encabezadoTabla);
+  			tabla.appendChild(cuerpoTabla);
+  			body.appendChild(tabla);
+  			tabla.setAttribute("border", "3",);
+		}
+
+		function buscaConexiones(arreglo){
+			var la = [];
+			var aux = 0;
+
+			for (var i = 0, j = 0; i < arreglo.length; i++){
+				for(; j < la.length & aux == 0; j++){
+					if (la[j].device == arreglo[i].device){
+						la[j].download += arreglo[i].download;
+						la[j].load += arreglo[i].load;
+						la[j].conexiones += 1;
+						aux = 1;
+					}
+				}
+
+				if (aux == 0){
+					la.push({device: arreglo[i].device, download: arreglo[i].download, load: arreglo[i].load, conexiones: 1});
+				}
+
+				j = 0;
+				aux = 0;
+			}
+			return la;
+		}
+	</script>
+
+</body>
+</html>

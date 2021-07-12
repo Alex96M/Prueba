@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+	<title></title>
+</head>
+<body>
+
+	<input type="text" id="valorC"> <button onclick="llamada()">consultar</button>
+
+	<br></br>
+
+	<div id="res"></div>
+
+	<script type="text/javascript">
+
+		function llamada(){
+			var casilla = document.getElementById('valorC').value - 1;
+			//var casilla = $('#valorC').value;
+			requestUser(casilla)
+		}
+
+
+		function requestUser(val){
+			$.ajax({
+		        url: 'https://jsonplaceholder.typicode.com/users',
+		        type: 'GET',
+		        success: function(respuesta) {
+		        	document.getElementById("res").innerHTML += respuesta[val].id + '<br>';
+		        	document.getElementById("res").innerHTML += respuesta[val].name + '<br>';
+		        	document.getElementById("res").innerHTML += respuesta[val].username + '<br>';
+		        	document.getElementById("res").innerHTML += respuesta[val].email + '<br>';
+		        	document.getElementById("res").innerHTML += respuesta[val].address.geo.lat + '<br>';
+		        	document.getElementById("res").innerHTML += respuesta[val].address.geo.lng + '<br>';
+		        },
+		        error: function() {
+		            console.error("No es posible completar la operación");
+		        }
+		    });
+		}
+	</script>
+
+</body>
+</html>
